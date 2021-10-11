@@ -1,68 +1,96 @@
 const fs = require("fs");
 
+class Contenedor {
+  productos = new Array();
+
+  addProducto(title, price, th) {
+    let producto = new Object();
+    producto["title"] = title;
+    producto["price"] = price;
+    producto["thumbmail"] = th;
+    producto["id"] = this.productos.length + 1;
+    this.productos.push(producto);
+  }
+
+  getById(numero) {
+    return this.productos[numero - 1];
+  }
+
+  getAll() {
+    return this.productos;
+  }
+
+  deleteById(numero) {
+    this.productos.pop[numero - 1];
+    return this.productos;
+  }
+
+  deleteAll() {
+    this.productos = [];
+  }
+}
+
 //Función para crear ruta o archivo
-async function agregar() {
+async function crearArchivo() {
   try {
-    await fs.promises.appendFile("./desafioDosArchivo.js", "");
-    console.log("agregado!");
+    await fs.promises.appendFile("./productos.txt", "");
+    console.log("archivo creado con exito!");
   } catch (error) {
     console.log("Hubo un error al crear archivo!!");
   }
 }
 
-//Para almacenar Productos
-class Contenedor {
-  constructor(productos) {
-    this.productos = productos;
-  }
-}
+p = new Contenedor();
 
-class Producto {
-  constructor(title, price, thumbmail, id) {
-    this.title = title;
-    this.price = price;
-    this.thumbmail = thumbmail;
-    this.id = id;
-  }
-}
-
-lp = [];
-
-function addProducto(title, price, th, id) {
-  c = new Producto();
-  c.tittle = title;
-  c.price = price;
-  c.thumbmail = th;
-  c.id = id;
-  lp.push(c);
-  agregar();
-}
-
-function leerArchivo() {
+async function leerArchivo() {
   fs.promises
-    .readFile("./desafioDosArchivo.js")
+    .readFile("./productos.txt")
     .then((contenido) => {
-      lp.push(contenido);
-      console.log(lp);
+      p.productos.push(contenido);
+      console.log("SOY LA LECTURA DEL ARCHIVO");
+      console.log(p.productos);
+      console.log("fin de la LECTURA DEL ARCHIVO");
     })
     .catch((err) => {
       console.log("Hubo un error al leer archivo!!", err);
     });
 }
 
-//escribe = lp.toString();
+a = p.productos;
 
-async function agregar() {
-  escribe = "lp = " + lp;
+async function save(a) {
   try {
-    await fs.promises.writeFile("./desafioDosArchivo.js", escribe);
+    await fs.promises.writeFile("./productos.txt", a.toString());
     console.log("agregado!");
   } catch (error) {
     console.log("ERROR AL AGREGAR!!");
   }
 }
 
-//agregar();
+//crearArchivo();
 leerArchivo();
-addProducto("Escuadra", 123.45, "una pagina", 1);
+p.addProducto(
+  "Escuadra",
+  123.45,
+  "https://cdn3.iconfinder.com/data/icons/education-209/64/ruler-triangle-stationary-school-256.png"
+);
+p.addProducto(
+  "Calculadora",
+  234.56,
+  "https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-256.png"
+);
 leerArchivo();
+save(p);
+p.addProducto(
+  "Globo Terráqueo",
+  345.67,
+  "https://cdn3.iconfinder.com/data/icons/education-209/64/globe-earth-geograhy-planet-school-256.png"
+);
+save(p);
+leerArchivo();
+console.log(p.getById(2));
+console.log(p.getAll());
+console.log(p.deleteById(1));
+console.log(p.deleteAll());
+
+//console.log(p.productos);
